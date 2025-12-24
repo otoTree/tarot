@@ -1,32 +1,15 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { useStore } from "@/store/useStore";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { TarotCard } from "@/components/tarot/card";
-import { getTranslation, getSpread, getCard } from "@/lib/i18n";
+import { getSpread, getCard } from "@/lib/i18n";
 
 export function SpreadBoard() {
   const { selectedSpread, placedCards, language } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const currentSpread = selectedSpread ? getSpread(selectedSpread.id, language) : null;
-
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
-        });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
 
   if (!currentSpread) return null;
 

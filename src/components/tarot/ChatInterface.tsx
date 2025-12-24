@@ -8,7 +8,6 @@ import { Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { AIConfig } from "@/types/tarot";
-import { getTranslation } from "@/lib/i18n";
 
 interface ChatInterfaceProps {
   config: AIConfig;
@@ -16,8 +15,7 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ config, onClose }: ChatInterfaceProps) {
-  const { selectedSpread, placedCards, isReading, startReading, language } = useStore();
-  const t = getTranslation(language);
+  const { selectedSpread, placedCards, isReading, startReading } = useStore();
   const [initialQuestion, setInitialQuestion] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 

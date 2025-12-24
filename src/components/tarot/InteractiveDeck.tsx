@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, PanInfo } from "framer-motion";
 import { useStore } from "@/store/useStore";
 import { getTranslation } from "@/lib/i18n";
 
@@ -13,7 +13,7 @@ export function InteractiveDeck() {
 
   if (isFull) return null;
 
-  const handleDragEnd = (index: number, info: any) => {
+  const handleDragEnd = (index: number, info: PanInfo) => {
     // Find if dropped on a slot
     const elements = document.elementsFromPoint(info.point.x, info.point.y);
     const slotElement = elements.find((el) => el.id.startsWith("slot-"));
