@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "bun db:migrate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "bun src/db/migrate.ts",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@ai-sdk/openai": "0.0.66",
