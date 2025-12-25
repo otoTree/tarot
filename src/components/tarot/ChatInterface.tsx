@@ -102,7 +102,7 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-6 flex flex-col mask-image-gradient">
+      <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-6 flex flex-col mask-image-gradient">
         <div className="w-full space-y-6 pb-4">
           {messages.map((m) => (
             <motion.div 
@@ -139,7 +139,7 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
       </div>
 
       {/* Input - At Bottom */}
-      <div className="p-6 pt-2">
+      <div className="p-4 pt-2 lg:p-6 lg:pt-2">
         <motion.form 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

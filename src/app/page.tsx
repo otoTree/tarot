@@ -94,13 +94,13 @@ export default function Home() {
               animate={{ opacity: 1 }}
               className={cn(
                 "w-full h-full relative transition-all duration-500 ease-in-out",
-                isFull ? "grid grid-cols-2 gap-12 items-center px-12 max-w-[1600px] mx-auto" : "flex flex-col items-center justify-center"
+                isFull ? "grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start lg:items-center px-0 lg:px-12 max-w-[1600px] mx-auto" : "flex flex-col items-center justify-center"
               )}
             >
                {/* Spread Board Area */}
                <div className={cn(
                  "w-full transition-all duration-500 flex flex-col items-center justify-center",
-                 isFull ? "h-full" : ""
+                 isFull ? "h-auto lg:h-full" : ""
                )}>
                   <SpreadBoard />
                   
@@ -115,7 +115,7 @@ export default function Home() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
-                    className="h-full max-h-[80vh] w-full"
+                    className="w-full h-[600px] lg:h-full lg:max-h-[80vh]"
                   >
                     <ChatInterface onClose={resetReading} />
                   </motion.div>

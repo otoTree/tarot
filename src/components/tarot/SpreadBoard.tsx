@@ -18,7 +18,7 @@ export function SpreadBoard() {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full aspect-[4/3] max-w-4xl mx-auto bg-white/30 backdrop-blur-sm rounded-3xl overflow-hidden my-8"
+      className="relative w-full aspect-[1/1] sm:aspect-[4/3] max-w-4xl mx-auto bg-white/30 backdrop-blur-sm rounded-3xl overflow-hidden my-8"
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black via-transparent to-transparent" />
@@ -32,12 +32,13 @@ export function SpreadBoard() {
           <div
             key={pos.id}
             id={`slot-${pos.id}`}
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center group"
+            className={cn(
+              "absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center group",
+              "w-[80px] h-[130px] sm:w-[100px] sm:h-[160px] lg:w-[140px] lg:h-[240px]"
+            )}
             style={{
               left: `${pos.x}%`,
               top: `${pos.y}%`,
-              width: "140px", 
-              height: "240px", 
             }}
           >
             {/* Slot Marker */}
@@ -72,7 +73,7 @@ export function SpreadBoard() {
                     )}
                   />
                   {/* Label below card */}
-                  <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-48 text-center flex flex-col gap-1 items-center z-20 pointer-events-none">
+                  <div className="absolute -bottom-8 lg:-bottom-12 left-1/2 -translate-x-1/2 w-48 text-center flex flex-col gap-1 items-center z-20 pointer-events-none">
                     <span className="text-[9px] uppercase tracking-widest text-black/40 font-semibold bg-white/90 backdrop-blur px-2 py-0.5 rounded-full shadow-sm border border-black/5">
                         {pos.name}
                     </span>
