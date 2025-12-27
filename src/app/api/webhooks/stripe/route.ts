@@ -100,8 +100,10 @@ async function handleSubscriptionChange(event: Stripe.Event) {
 
   // Safe access to current_period_start/end
   // Ensure we have valid numbers before creating Dates
-  const startTime = (subscription as any).current_period_start;
-  const endTime = (subscription as any).current_period_end;
+  // Using unknown cast first to avoid eslint no-explicit-any error
+  const subTyped = subscription as unknown as { current_period_start?: number; current_period_end?: number };
+  const startTime = subTyped.current_period_start;
+  const endTime = subTyped.current_period_end;
 
   // Fallback to current time if start is missing
   const currentPeriodStart = startTime 
