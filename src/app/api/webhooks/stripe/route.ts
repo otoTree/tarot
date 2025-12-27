@@ -177,14 +177,35 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
 
   if (!user) return;
 
-  // Reset usage if this is a renewal (implied by invoice.paid for subscription)
-  // Simple approach: reset usage on every paid invoice for subscription
+  // Identify Plan from Invoice to determine credits
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const priceId = (invoice.lines.data[0] as any)?.price?.id;
+  let planConfig = PRICING_PLANS[PLANS.BASIC];
+
+  for (const config of Object.values(PRICING_PLANS)) {
+      if (config.stripePriceId === priceId) {
+          planConfig = config;
+          break;
+      }
+  }
+
+  // Calculate credits to add
+  // Only add credits for monthly plans (Pro/Premium), not Basic (total)
+  let creditsToAdd = 0;
+  if (planConfig.features.aiReadings.type === 'month') {
+      creditsToAdd = planConfig.features.aiReadings.limit;
+  }
+
+  // Update user: reset usage AND add credits
   await db.update(users)
       .set({ 
           aiReadingsUsage: 0,
-          consultationUsage: 0
+          consultationUsage: 0,
+          creditBalance: user.creditBalance + creditsToAdd
       })
       .where(eq(users.id, user.id));
+      
+  console.log(`Processed invoice for user ${user.id}: Added ${creditsToAdd} credits.`);
 }
 
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
