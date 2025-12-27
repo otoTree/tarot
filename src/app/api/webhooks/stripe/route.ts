@@ -98,17 +98,28 @@ async function handleSubscriptionChange(event: Stripe.Event) {
     where: eq(subscriptions.stripeSubscriptionId, subscription.id),
   });
 
-  // Safe access to current_period_start/end using type assertion to avoid explicit any
-  // while acknowledging these properties might be missing in strict types but present in runtime
-  const subWithPeriods = subscription as unknown as { current_period_start: number; current_period_end: number };
+  // Safe access to current_period_start/end
+  // Ensure we have valid numbers before creating Dates
+  const startTime = (subscription as any).current_period_start;
+  const endTime = (subscription as any).current_period_end;
+
+  // Fallback to current time if start is missing
+  const currentPeriodStart = startTime 
+    ? new Date(startTime * 1000) 
+    : new Date();
+    
+  // Fallback to 30 days from now if end is missing
+  const currentPeriodEnd = endTime 
+    ? new Date(endTime * 1000) 
+    : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
   const subscriptionData = {
     userId: user.id,
     stripeSubscriptionId: subscription.id,
-    stripePriceId: subscription.items.data[0].price.id,
+    stripePriceId: subscription.items.data[0]?.price.id,
     status: subscription.status,
-    currentPeriodStart: new Date(subWithPeriods.current_period_start * 1000),
-    currentPeriodEnd: new Date(subWithPeriods.current_period_end * 1000),
+    currentPeriodStart,
+    currentPeriodEnd,
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
   };
 
