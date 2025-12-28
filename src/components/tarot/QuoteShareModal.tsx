@@ -94,7 +94,7 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
           <div 
             ref={contentRef}
             data-share-content 
-            className="bg-[#fafaf9] p-8 md:p-12 rounded-xl shadow-sm border border-stone-200 space-y-8 w-full max-w-md mx-auto relative"
+            className="bg-[#fafaf9] p-6 md:p-12 rounded-xl shadow-sm border border-stone-200 space-y-5 md:space-y-8 w-full max-w-md mx-auto relative"
           >
             {/* Background Decoration - Moved to separate layer for overflow handling */}
             <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
@@ -104,12 +104,12 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
             
             {/* Header */}
             <div className="text-center space-y-1">
-              <h3 className="font-serif text-xl tracking-wide text-black/90">{t.app?.title || "Lumin Tarot"}</h3>
+              <h3 className="font-serif text-lg md:text-xl tracking-wide text-black/90">{t.app?.title || "Lumin Tarot"}</h3>
             </div>
             
             {/* Quote Content */}
-            <div className="relative py-8 px-2">
-                <div className="relative z-10 font-serif text-base md:text-lg leading-relaxed text-black/80 text-center px-6 italic break-words">
+            <div className="relative py-4 md:py-8 px-2">
+                <div className="relative z-10 font-serif text-sm md:text-lg leading-relaxed text-black/80 text-center px-2 md:px-6 italic break-words">
                     {quote}
                 </div>
             </div>
@@ -117,7 +117,7 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
             {/* Context/Footer */}
             <div className="border-t border-black/5 pt-6 text-center space-y-2">
                 {question && (
-                    <div className="text-xs text-black/40 font-medium tracking-wide uppercase px-4 break-words">
+                    <div className="text-[10px] md:text-xs text-black/40 font-medium tracking-wide uppercase px-4 break-words">
                         {question}
                     </div>
                 )}

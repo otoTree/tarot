@@ -494,31 +494,42 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
 
       {/* Floating Quote Share Button */}
       {selectionRect && selectedText && !isSelectionMode && createPortal(
-          <div 
-            className="fixed z-[9999] animate-in fade-in zoom-in duration-200 pointer-events-auto"
-            style={{
-                top: Math.max(10, selectionRect.top - 50),
-                left: selectionRect.left + selectionRect.width / 2,
-                transform: 'translateX(-50%)'
-            }}
-          >
-             <Button 
-                size="sm" 
-                onClick={(e) => {
-                    e.stopPropagation(); // Prevent clearing selection
-                    setQuoteToShare(selectedText);
-                    setShowQuoteModal(true);
-                    // Clear selection to hide button and highlight
-                    window.getSelection()?.removeAllRanges();
+          (() => {
+            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+            return (
+              <div 
+                className="fixed z-[9999] animate-in fade-in zoom-in duration-200 pointer-events-auto"
+                style={isMobile ? {
+                    bottom: '160px',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                } : {
+                    top: Math.max(10, selectionRect.top - 50),
+                    left: selectionRect.left + selectionRect.width / 2,
+                    transform: 'translateX(-50%)'
                 }}
-                className="bg-black text-white hover:bg-black/90 shadow-xl rounded-full px-4 h-9 gap-2 text-xs font-medium relative z-10"
-             >
-                <Quote className="w-3.5 h-3.5" />
-                 {t.share.quote_action}
-              </Button>
-             {/* Arrow/Triangle pointing down */}
-             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-black rotate-45" />
-          </div>,
+              >
+                 <Button 
+                    size="sm" 
+                    onClick={(e) => {
+                        e.stopPropagation(); // Prevent clearing selection
+                        setQuoteToShare(selectedText);
+                        setShowQuoteModal(true);
+                        // Clear selection to hide button and highlight
+                        window.getSelection()?.removeAllRanges();
+                    }}
+                    className="bg-black text-white hover:bg-black/90 shadow-xl rounded-full px-4 h-9 gap-2 text-xs font-medium relative z-10"
+                 >
+                    <Quote className="w-3.5 h-3.5" />
+                     {t.share.quote_action}
+                  </Button>
+                 {/* Arrow/Triangle pointing down - Desktop only */}
+                 {!isMobile && (
+                   <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-black rotate-45" />
+                 )}
+              </div>
+            );
+          })(),
           document.body
       )}
 
