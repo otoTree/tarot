@@ -1,18 +1,28 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { TarotCard } from "@/components/tarot/card";
 import { CardDetailModal } from "@/components/tarot/CardDetailModal";
-import { getSpread, getCard } from "@/lib/i18n";
-import { TarotCard as TarotCardType } from "@/types/tarot";
+import { getCard } from "@/lib/i18n";
+import { TarotCard as TarotCardType, Spread } from "@/types/tarot";
 
 export function SpreadBoard() {
   const { selectedSpread, placedCards, language } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedCard, setSelectedCard] = useState<{ card: TarotCardType; isReversed: boolean } | null>(null);
+  const [currentSpread, setCurrentSpread] = useState<Spread | null>(selectedSpread);
 
-  const currentSpread = selectedSpread ? getSpread(selectedSpread.id, language) : null;
+  useEffect(() => {
+    if (selectedSpread) {
+      fetch(`/api/spreads?lang=${language}`)
+        .then(res => res.json())
+        .then(spreads => {
+          const match = spreads.find((s: Spread) => s.id === selectedSpread.id);
+          if (match) setCurrentSpread(match);
+        });
+    }
+  }, [selectedSpread, language]);
 
   if (!currentSpread) return null;
 

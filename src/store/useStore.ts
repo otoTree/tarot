@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Spread, PlacedCard, TarotCard } from '@/types/tarot';
-import { SPREADS } from '@/lib/spreads';
 import { CARDS } from '@/lib/cards';
 import { Message } from 'ai';
 
@@ -29,13 +28,13 @@ interface TarotState {
   setQuestion: (question: string) => void;
   setLoadingHistory: (isLoading: boolean) => void;
   initializeDeck: () => void;
-  selectSpread: (spreadId: string) => void;
+  selectSpread: (spread: Spread) => void;
   placeCard: (card: TarotCard, positionId: string, isReversed: boolean) => void;
   removeCard: (positionId: string) => void;
   startReading: () => void;
   resetReading: () => void;
   clearSpread: () => void;
-  loadSession: (spreadId: string, placedCards: Record<string, PlacedCard>, sessionId: string, history: Message[], question: string) => void;
+  loadSession: (spread: Spread, placedCards: Record<string, PlacedCard>, sessionId: string, history: Message[], question: string) => void;
 }
 
 export const useStore = create<TarotState>()(
@@ -55,8 +54,7 @@ export const useStore = create<TarotState>()(
       setQuestion: (question) => set({ currentQuestion: question }),
       setLoadingHistory: (isLoading) => set({ isLoadingHistory: isLoading }),
 
-      loadSession: (spreadId, placedCards, sessionId, history, question) => {
-        const spread = SPREADS.find(s => s.id === spreadId) || SPREADS[0];
+      loadSession: (spread, placedCards, sessionId, history, question) => {
         set({
           selectedSpread: spread,
           placedCards,
@@ -84,9 +82,7 @@ export const useStore = create<TarotState>()(
         set({ deck: newDeck, placedCards: {}, isReading: false, sessionId: null, chatHistory: [], currentQuestion: "" });
       },
 
-      selectSpread: (spreadId) => {
-        const spread = SPREADS.find(s => s.id === spreadId) || SPREADS[0];
-        
+      selectSpread: (spread) => {
         const currentDeck = get().deck;
         if (currentDeck.length === 0) {
           get().initializeDeck();

@@ -3,9 +3,9 @@
 import { useStore } from "@/store/useStore";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { SpreadPosition } from "@/types/tarot";
-import { getSpreads, getTranslation } from "@/lib/i18n";
-import { useState } from "react";
+import { SpreadPosition, Spread } from "@/types/tarot";
+import { getTranslation } from "@/lib/i18n";
+import { useState, useEffect } from "react";
 import { Star } from "lucide-react";
 
 const SpreadPreview = ({ positions }: { positions: SpreadPosition[] }) => {
@@ -63,15 +63,30 @@ const RecommendedBadge = ({ language }: { language: 'en' | 'zh' }) => {
 export function SpreadSelector() {
   const { selectedSpread, selectSpread, language } = useStore();
   const t = getTranslation(language);
-  const spreads = getSpreads(language);
+  const [spreads, setSpreads] = useState<Spread[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
 
-  const handleSelect = (id: string) => {
+  useEffect(() => {
+    const fetchSpreads = async () => {
+      try {
+        const res = await fetch(`/api/spreads?lang=${language}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSpreads(data);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchSpreads();
+  }, [language]);
+
+  const handleSelect = (spread: Spread) => {
     if (isSelecting) return;
     setIsSelecting(true);
 
     setTimeout(() => {
-      selectSpread(id);
+      selectSpread(spread);
       setIsSelecting(false);
     }, 200);
   };
@@ -98,8 +113,7 @@ export function SpreadSelector() {
             return (
               <motion.button
                 key={spread.id}
-                type="button"
-                onClick={() => handleSelect(spread.id)}
+                onClick={() => handleSelect(spread)}
                 whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 className={cn(

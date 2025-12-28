@@ -3,9 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Loader2, Calendar, LayoutGrid, MessageSquare, Trash2 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { getTranslation } from '@/lib/i18n';
-import { PlacedCard } from '@/types/tarot';
+import { PlacedCard, Spread } from '@/types/tarot';
 import { CARDS } from '@/lib/cards';
-import { SPREADS } from '@/lib/spreads';
 
 interface Session {
   id: string;
@@ -27,20 +26,27 @@ interface HistoryModalProps {
 export function HistoryModal({ open, onOpenChange }: HistoryModalProps) {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [spreadsMap, setSpreadsMap] = useState<Record<string, Spread>>({});
   const { language, loadSession, setLoadingHistory } = useStore();
   const t = getTranslation(language);
 
   useEffect(() => {
     if (open) {
       setIsLoading(true);
-      fetch('/api/sessions')
-        .then(res => res.json())
-        .then(data => {
-          if (data.sessions) setSessions(data.sessions);
+      Promise.all([
+        fetch('/api/sessions').then(res => res.json()),
+        fetch(`/api/spreads?lang=${language}`).then(res => res.json())
+      ])
+        .then(([sessionsData, spreadsData]) => {
+          if (sessionsData.sessions) setSessions(sessionsData.sessions);
+          if (Array.isArray(spreadsData)) {
+            const map = spreadsData.reduce((acc, s) => ({ ...acc, [s.id]: s }), {} as Record<string, Spread>);
+            setSpreadsMap(map);
+          }
         })
         .finally(() => setIsLoading(false));
     }
-  }, [open]);
+  }, [open, language]);
 
   const handleDeleteSession = async (e: React.MouseEvent, sessionId: string) => {
     e.stopPropagation();
@@ -62,6 +68,12 @@ export function HistoryModal({ open, onOpenChange }: HistoryModalProps) {
     const session = sessions.find(s => s.id === sessionId);
     if (!session) return;
 
+    const spread = spreadsMap[session.spreadId];
+    if (!spread) {
+        console.error("Spread not found for session", session.spreadId);
+        return;
+    }
+
     // 1. Immediate UI update with available data
     const placedCards: Record<string, PlacedCard> = {};
     if (session.cardsDrawn) {
@@ -78,7 +90,7 @@ export function HistoryModal({ open, onOpenChange }: HistoryModalProps) {
     }
 
     // Load with empty history first to show the board immediately
-    loadSession(session.spreadId, placedCards, sessionId, [], session.question);
+    loadSession(spread, placedCards, sessionId, [], session.question);
     onOpenChange(false);
     setLoadingHistory(true);
 
@@ -97,7 +109,7 @@ export function HistoryModal({ open, onOpenChange }: HistoryModalProps) {
         }));
 
         // Update session with loaded history
-        loadSession(session.spreadId, placedCards, sessionId, history, session.question);
+        loadSession(spread, placedCards, sessionId, history, session.question);
       }
     } catch (error) {
       console.error("Failed to load session details", error);
@@ -116,9 +128,8 @@ export function HistoryModal({ open, onOpenChange }: HistoryModalProps) {
   };
 
   const getSpreadName = (id: string) => {
-    return SPREADS.find(s => s.id === id)?.name || id;
+    return spreadsMap[id]?.name || id;
   };
-
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

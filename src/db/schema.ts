@@ -1,5 +1,31 @@
-import { pgTable, serial, text, integer, boolean, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, boolean, timestamp, uuid, unique } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+
+export const spreads = pgTable('spreads', {
+  id: serial('id').primaryKey(),
+  slug: text('slug').notNull(), // e.g., "celtic-cross"
+  lang: text('lang').notNull().default('en'), // 'en' | 'zh'
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  detail: text('detail'),
+  difficulty: text('difficulty'),
+  recommended: boolean('recommended').default(false),
+  tags: text('tags').array(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (t) => ({
+  slugLangUnique: unique('slug_lang_unique').on(t.slug, t.lang),
+}));
+
+export const spreadPositions = pgTable('spread_positions', {
+  id: serial('id').primaryKey(),
+  spreadId: integer('spread_id').references(() => spreads.id, { onDelete: 'cascade' }).notNull(),
+  positionIndex: text('position_index').notNull(), // "1", "2"... mapping to SpreadPosition.id
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  x: integer('x').notNull(),
+  y: integer('y').notNull(),
+});
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -115,5 +141,16 @@ export const cardsDrawnRelations = relations(cardsDrawn, ({ one }) => ({
   session: one(sessions, {
     fields: [cardsDrawn.sessionId],
     references: [sessions.id],
+  }),
+}));
+
+export const spreadsRelations = relations(spreads, ({ many }) => ({
+  positions: many(spreadPositions),
+}));
+
+export const spreadPositionsRelations = relations(spreadPositions, ({ one }) => ({
+  spread: one(spreads, {
+    fields: [spreadPositions.spreadId],
+    references: [spreads.id],
   }),
 }));
