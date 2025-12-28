@@ -166,20 +166,17 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
     };
 
     // Update position on scroll
-    const handleScroll = () => {
-        if (selectionRect) {
-             // Hide button on scroll to prevent misalignment, force user to re-select or wait for mouseup
-             // Or better: update position if possible. 
-             // Since rect is static, let's just hide it on scroll for better UX (like native menus)
-             setSelectionRect(null);
-             setSelectedText("");
-        }
-    };
+    // const handleScroll = () => {
+    //     if (selectionRect) {
+    //          setSelectionRect(null);
+    //          setSelectedText("");
+    //     }
+    // };
 
     document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("keyup", handleMouseUp); // For keyboard selection
     document.addEventListener("selectionchange", handleSelectionChange);
-    window.addEventListener("scroll", handleScroll, true);
+    // window.addEventListener("scroll", handleScroll, true);
     // Also listen to touch end for mobile support
     document.addEventListener("touchend", handleMouseUp);
 
@@ -187,7 +184,7 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
       document.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("keyup", handleMouseUp);
       document.removeEventListener("selectionchange", handleSelectionChange);
-      window.removeEventListener("scroll", handleScroll, true);
+      // window.removeEventListener("scroll", handleScroll, true);
       document.removeEventListener("touchend", handleMouseUp);
     };
   }, [selectionRect]);
@@ -325,6 +322,33 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
                 {t.chat.confirm_share || "Share"} ({selectedMessageIds.size})
               </Button>
             </div>
+        ) : selectedText ? (
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm border border-black/5 animate-in fade-in zoom-in duration-200">
+               <Button
+                 size="sm"
+                 onMouseDown={(e) => e.preventDefault()}
+                 onClick={() => {
+                   setQuoteToShare(selectedText);
+                   setShowQuoteModal(true);
+                   window.getSelection()?.removeAllRanges();
+                 }}
+                 className="h-7 text-xs px-3 bg-black text-white hover:bg-black/80 gap-2"
+               >
+                 <Quote className="w-3 h-3" />
+                 {t.share.quote_action || "Quote"}
+               </Button>
+               <div className="w-[1px] h-4 bg-black/10" />
+               <button
+                 onMouseDown={(e) => e.preventDefault()}
+                 onClick={() => {
+                   window.getSelection()?.removeAllRanges();
+                 }}
+                 className="p-1 hover:bg-black/5 rounded-full"
+                 title={t.chat.cancel_select || "Cancel"}
+               >
+                 <X className="w-3 h-3 opacity-50" />
+               </button>
+             </div>
         ) : (
             <button 
                 onClick={toggleSelectionMode}
@@ -492,46 +516,7 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
         question={currentQuestion}
       />
 
-      {/* Floating Quote Share Button */}
-      {selectionRect && selectedText && !isSelectionMode && createPortal(
-          (() => {
-            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-            return (
-              <div 
-                className="fixed z-[9999] animate-in fade-in zoom-in duration-200 pointer-events-auto"
-                style={isMobile ? {
-                    bottom: '40px',
-                    left: '50%',
-                    transform: 'translateX(-50%)'
-                } : {
-                    top: Math.max(10, selectionRect.top - 50),
-                    left: selectionRect.left + selectionRect.width / 2,
-                    transform: 'translateX(-50%)'
-                }}
-              >
-                 <Button 
-                    size="sm" 
-                    onClick={(e) => {
-                        e.stopPropagation(); // Prevent clearing selection
-                        setQuoteToShare(selectedText);
-                        setShowQuoteModal(true);
-                        // Clear selection to hide button and highlight
-                        window.getSelection()?.removeAllRanges();
-                    }}
-                    className="bg-black text-white hover:bg-black/90 shadow-xl rounded-full px-4 h-9 gap-2 text-xs font-medium relative z-10"
-                 >
-                    <Quote className="w-3.5 h-3.5" />
-                     {t.share.quote_action}
-                  </Button>
-                 {/* Arrow/Triangle - Desktop only */}
-                 {!isMobile && (
-                   <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-black rotate-45" />
-                 )}
-              </div>
-            );
-          })(),
-          document.body
-      )}
+
 
       <QuoteShareModal 
         open={showQuoteModal} 

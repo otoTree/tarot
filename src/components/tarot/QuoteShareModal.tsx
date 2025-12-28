@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { getTranslation } from "@/lib/i18n";
 import { useStore } from "@/store/useStore";
-import { Copy, Download, Loader2 } from "lucide-react";
+import { Copy, Download, Loader2, Moon, Sun } from "lucide-react";
 import html2canvas from "html2canvas";
+import { cn } from "@/lib/utils";
 
 interface QuoteShareModalProps {
   open: boolean;
@@ -20,6 +21,7 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
   const [isGenerating, setIsGenerating] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [domain, setDomain] = useState("");
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -47,6 +49,10 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
     }
   };
 
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
   const handleDownload = async () => {
     if (!contentRef.current) return;
     setIsGenerating(true);
@@ -56,7 +62,7 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
       const canvas = await html2canvas(element, {
         scale: 2, // Match ShareModal
         useCORS: true,
-        backgroundColor: '#fafaf9', // stone-50
+        backgroundColor: theme === 'light' ? '#fafaf9' : '#000000', // stone-50 or black
         logging: false,
         windowWidth: window.innerWidth, // Ensure media queries match current view
         onclone: (clonedDoc) => {
@@ -94,34 +100,60 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
           <div 
             ref={contentRef}
             data-share-content 
-            className="bg-[#fafaf9] p-6 md:p-12 rounded-xl shadow-sm border border-stone-200 space-y-5 md:space-y-8 w-full max-w-md mx-auto relative"
+            className={cn(
+              "p-6 md:p-12 rounded-xl shadow-sm border space-y-5 md:space-y-8 w-full max-w-md mx-auto relative transition-colors duration-300",
+              theme === 'light' 
+                ? "bg-[#fafaf9] border-stone-200" 
+                : "bg-zinc-950 border-zinc-800"
+            )}
           >
             {/* Background Decoration - Moved to separate layer for overflow handling */}
             <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-black/5 to-transparent rounded-bl-full -mr-16 -mt-16" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-black/5 to-transparent rounded-tr-full -ml-12 -mb-12" />
+                <div className={cn(
+                  "absolute top-0 right-0 w-32 h-32 bg-gradient-to-br rounded-bl-full -mr-16 -mt-16",
+                  theme === 'light' ? "from-black/5 to-transparent" : "from-white/5 to-transparent"
+                )} />
+                <div className={cn(
+                  "absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr rounded-tr-full -ml-12 -mb-12",
+                  theme === 'light' ? "from-black/5 to-transparent" : "from-white/5 to-transparent"
+                )} />
             </div>
             
             {/* Header */}
             <div className="text-center space-y-1">
-              <h3 className="font-serif text-lg md:text-xl tracking-wide text-black/90">{t.app?.title || "Lumin Tarot"}</h3>
+              <h3 className={cn(
+                "font-serif text-lg md:text-xl tracking-wide transition-colors",
+                theme === 'light' ? "text-black/90" : "text-white/90"
+              )}>{t.app?.title || "Lumin Tarot"}</h3>
             </div>
             
             {/* Quote Content */}
             <div className="relative py-4 md:py-8 px-2">
-                <div className="relative z-10 font-serif text-sm md:text-lg leading-relaxed text-black/80 text-center px-2 md:px-6 italic break-words">
+                <div className={cn(
+                  "relative z-10 font-serif text-sm md:text-lg leading-relaxed text-center px-2 md:px-6 italic break-words transition-colors",
+                  theme === 'light' ? "text-black/80" : "text-white/80"
+                )}>
                     {quote}
                 </div>
             </div>
 
             {/* Context/Footer */}
-            <div className="border-t border-black/5 pt-6 text-center space-y-2">
+            <div className={cn(
+              "border-t pt-6 text-center space-y-2 transition-colors",
+              theme === 'light' ? "border-black/5" : "border-white/10"
+            )}>
                 {question && (
-                    <div className="text-[10px] md:text-xs text-black/40 font-medium tracking-wide uppercase px-4 break-words">
+                    <div className={cn(
+                      "text-[10px] md:text-xs font-medium tracking-wide uppercase px-4 break-words transition-colors",
+                      theme === 'light' ? "text-black/40" : "text-white/40"
+                    )}>
                         {question}
                     </div>
                 )}
-                <div className="text-[10px] text-black/30 pt-2 font-mono">
+                <div className={cn(
+                  "text-[10px] pt-2 font-mono transition-colors",
+                  theme === 'light' ? "text-black/30" : "text-white/30"
+                )}>
                     {domain}
                 </div>
             </div>
@@ -129,15 +161,21 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
         </div>
 
         {/* Actions */}
-        <div className="p-4 bg-white/50 backdrop-blur-sm border-t border-black/5 flex justify-end gap-2">
-           <Button variant="outline" onClick={handleCopy} className="gap-2">
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            {copied ? t.share.copied : t.share.copy_text}
+        <div className="p-4 bg-white/50 backdrop-blur-sm border-t border-black/5 flex justify-between items-center">
+           <Button variant="ghost" size="icon" onClick={toggleTheme} className="text-black/60 hover:text-black">
+            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           </Button>
-          <Button onClick={handleDownload} disabled={isGenerating} className="gap-2 bg-black text-white hover:bg-black/80">
-            {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-            {t.share.save_image}
-          </Button>
+
+           <div className="flex gap-2">
+            <Button variant="outline" onClick={handleCopy} className="gap-2">
+              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copied ? t.share.copied : t.share.copy_text}
+            </Button>
+            <Button onClick={handleDownload} disabled={isGenerating} className="gap-2 bg-black text-white hover:bg-black/80">
+              {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              {t.share.save_image}
+            </Button>
+           </div>
         </div>
       </DialogContent>
     </Dialog>

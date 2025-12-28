@@ -48,7 +48,7 @@ export default function Home() {
         <div className="flex gap-4 items-center">
           <button 
             onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
-            className="p-2 hover:bg-black/5 rounded-full transition-colors flex items-center gap-2"
+            className="hidden md:flex p-2 hover:bg-black/5 rounded-full transition-colors items-center gap-2"
             title={t.app.lang_switch}
           >
             <Globe className="h-4 w-4 opacity-50" />
@@ -58,14 +58,14 @@ export default function Home() {
             <>
               <button 
                 onClick={clearSpread}
-                className="p-2 hover:bg-black/5 rounded-full transition-colors"
+                className="hidden md:block p-2 hover:bg-black/5 rounded-full transition-colors"
                 title={language === 'zh' ? '返回选择' : 'Back to Selection'}
               >
                 <ArrowLeft className="h-4 w-4 opacity-50" />
               </button>
               <button 
                 onClick={resetReading}
-                className="p-2 hover:bg-black/5 rounded-full transition-colors"
+                className="hidden md:block p-2 hover:bg-black/5 rounded-full transition-colors"
                 title={t.app.reset}
               >
                 <RefreshCw className="h-4 w-4 opacity-50" />
