@@ -104,7 +104,7 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
             
             {/* Header */}
             <div className="text-center space-y-1">
-              <h3 className="font-serif text-xl tracking-wide text-black/90">{t.app?.title || "Aether Tarot"}</h3>
+              <h3 className="font-serif text-xl tracking-wide text-black/90">{t.app?.title || "Lumin Tarot"}</h3>
             </div>
             
             {/* Quote Content */}

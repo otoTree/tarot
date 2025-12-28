@@ -14,6 +14,10 @@ import { cn } from "@/lib/utils";
 import { getTranslation } from "@/lib/i18n";
 import { UserMenu } from "@/components/auth/UserMenu";
 import { Hero } from "@/components/tarot/Hero";
+import { BrandStory } from "@/components/BrandStory";
+import { ProcessSection } from "@/components/tarot/ProcessSection";
+import { DemoShowcase } from "@/components/tarot/DemoShowcase";
+import { ScrollingMarquee } from "@/components/tarot/ScrollingMarquee";
 import { PricingSection } from "@/components/tarot/PricingSection";
 
 export default function Home() {
@@ -84,9 +88,13 @@ export default function Home() {
                 exit={{ opacity: 0, y: -20 }}
                 className="w-full flex-1 flex flex-col items-center justify-center gap-24"
              >
-                <div className="min-h-[80vh] flex items-center justify-center w-full">
+                <div className="w-full">
                   <Hero onStart={() => setHasStarted(true)} />
                 </div>
+                <ScrollingMarquee />
+                <ProcessSection />
+                <DemoShowcase />
+                <BrandStory content={t.brandStory} />
                 <PricingSection />
              </motion.div>
           ) : !selectedSpread ? (

@@ -70,12 +70,12 @@ export async function POST(req: Request) {
 
     // Send email using Nodemailer
     const mailOptions = {
-      from: process.env.SMTP_FROM || '"Aether Tarot" <noreply@example.com>',
+      from: process.env.SMTP_FROM || '"Lumin Tarot" <noreply@example.com>',
       to: email,
-      subject: 'Your Verification Code - Aether Tarot',
+      subject: 'Your Verification Code - Lumin Tarot',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #333;">Welcome to Aether Tarot</h1>
+          <h1 style="color: #333;">Welcome to Lumin Tarot</h1>
           <p>Your verification code is:</p>
           <div style="background-color: #f4f4f4; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
             <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #000;">${code}</span>
