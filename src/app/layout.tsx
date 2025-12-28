@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Cinzel } from "next/font/google";
+import { LanguageInit } from "@/components/LanguageInit";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased font-sans`}
       >
+        <LanguageInit />
         {children}
       </body>
     </html>
