@@ -113,7 +113,7 @@ export function Hero({ onStart }: { onStart: () => void }) {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] uppercase tracking-widest text-black/20 font-sans">Scroll to Discover</span>
+        <span className="text-[10px] uppercase tracking-widest text-black/20 font-sans">{t.hero.scroll_to_discover}</span>
         <div className="w-px h-12 bg-gradient-to-b from-black/20 to-transparent" />
       </motion.div>
     </div>

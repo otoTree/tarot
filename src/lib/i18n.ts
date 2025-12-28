@@ -1,11 +1,11 @@
-import { translations, Language } from "./translations";
+import { translations, Language, Translation } from "./translations";
 import { SPREADS } from "./spreads";
 import { SPREADS_ZH } from "./spreads.zh";
 import { CARDS } from "./cards";
 import { CARDS_ZH } from "./cards.zh";
 import { Spread, TarotCard } from "@/types/tarot";
 
-export const getTranslation = (lang: Language) => translations[lang];
+export const getTranslation = (lang: Language): Translation => translations[lang];
 
 export const getSpreads = (lang: Language): Spread[] => {
   return lang === 'zh' ? SPREADS_ZH : SPREADS;
