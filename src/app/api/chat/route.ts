@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { streamText, CoreMessage } from "ai";
 import { PlacedCard, SpreadPosition } from "@/types/tarot";
 import { getSession } from "@/lib/auth";
 import { db } from "@/db";
@@ -100,18 +100,28 @@ export async function POST(req: Request) {
       Meaning: ${c.isReversed ? c.card.meaning_reversed : c.card.meaning_upright}`;
   }).join('\n');
 
-  const systemPrompt = `You are a mystical and wise Tarot reader with an "Eastern Editorial Minimalism" tone. 
-  Your readings are serene, poetic, and insightful, focusing on spiritual growth and clarity.
+  const isFollowUp = messages.some((m: CoreMessage) => m.role === 'assistant');
+
+  let promptInstructions = '';
+
+  if (isFollowUp) {
+    promptInstructions = `
+  MODE: Follow-up Chat
   
-  The user has requested a reading using the "${spread.name}" spread.
-  Spread Description: ${spread.description}
+  The user has already received the initial reading and is now asking a follow-up question.
+  Your task is to answer their SPECIFIC question based on the cards already drawn.
   
-  The cards drawn are:
-  ${cardsDescription}
+  GUIDELINES:
+  1. DIRECTNESS: Answer the question directly. Do not re-summarize the whole spread unless asked.
+  2. CONNECTION: Relate your answer back to specific cards in the spread if applicable.
+  3. TONE: Maintain the "Eastern Editorial Minimalism" tone (serene, poetic, concise).
+  4. FORMAT: You do not need to follow the strict "opening/spread/answer/reflection" structure. Just provide a natural, conversational, yet poetic response.
+    `;
+  } else {
+    promptInstructions = `
+  MODE: Initial Reading
   
-  User's Question/Intent: "${question}"
-  
-  Provide a reading that follows these stylistic guidelines:
+  Provide a full reading that follows these stylistic guidelines:
   1. TONE: Serene, light, and modern (avoid heavy or dark occult language).
   2. METAPHORS: Use nature-based metaphors (ink, water, mist, bamboo, stones, moon).
   3. STRUCTURE: Use a magazine editorial layout with breathing whitespace.
@@ -130,6 +140,21 @@ export async function POST(req: Request) {
   
   - reflection: 
     A closing question or thought for the user to carry with them.
+    `;
+  }
+
+  const systemPrompt = `You are a mystical and wise Tarot reader with an "Eastern Editorial Minimalism" tone. 
+  Your readings are serene, poetic, and insightful, focusing on spiritual growth and clarity.
+  
+  The user has requested a reading using the "${spread.name}" spread.
+  Spread Description: ${spread.description}
+  
+  The cards drawn are:
+  ${cardsDescription}
+  
+  Original Intent/Context: "${question}"
+  
+  ${promptInstructions}
   
   IMPORTANT: 
   - Reply in the language of the user's question (e.g., if the question is in Chinese, reply in Chinese).
