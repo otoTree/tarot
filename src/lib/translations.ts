@@ -2,16 +2,26 @@
 export const translations = {
   en: {
     app: {
-      title: "Aether Tarot",
+      title: "Lumin Tarot",
       subtitle: "Mystic insights through the veil of digital consciousness",
       start: "Begin Consultation",
       reset: "Reset Reading",
       lang_switch: "Switch Language",
     },
     hero: {
-        title: "The Oracle of Aether",
-        subtitle: "Ancient wisdom meets digital consciousness. Ask the cards, and they shall answer.",
+        title: "Lumin Tarot",
+        subtitle: "Ancient wisdom meets digital consciousness. Fate flows like a river; ask the cards, and listen to the echo.",
         cta: "Select a Spread",
+    },
+    brandStory: {
+      title: "LUMIN | The Architecture of Fate",
+      concept: "We do not predict. We reveal. Confusion is a lack of light. Clarity is a choice. Destiny is not a script. It is a current waiting to be seen. Lumin is the moment the lens clears. It is the power of the now.",
+      rivers: {
+        time: "The Continuum: Fate is a sequence, not a surprise. We find the coherence in your history to reveal the inevitable logic of your tomorrow.",
+        data: "The Synthesis: Chaos is merely data waiting for a lens. We use the precision of AI to strip away the noise, leaving only the elegant geometry of your truth.",
+        emotion: "The Resolve: Energy follows intent. We anchor your drifting uncertainty, transforming the weight of the unknown into the momentum of the now."
+      },
+      cta: ""
     },
     spreadSelector: {
       label: "Select Spread",
@@ -136,16 +146,26 @@ export const translations = {
   },
   zh: {
     app: {
-      title: "以太塔罗",
+      title: "流明塔罗",
       subtitle: "透过数字意识的帷幕，探寻神秘洞见",
       start: "开始咨询",
       reset: "重置解读",
       lang_switch: "切换语言",
     },
     hero: {
-        title: "以太神谕",
-        subtitle: "古老智慧与数字意识的交汇。叩问塔罗，静听回响。",
+        title: "流明塔罗",
+        subtitle: "古老智慧与数字意识的交汇。命运如流，叩问塔罗，静听回响。",
         cta: "选择牌阵",
+    },
+    brandStory: {
+      title: "流明塔罗 | 命运架构「溯流三境」",
+      concept: "不为预言，只为照见。无光则惑，见光则明。命非定数，流向自现。",
+      rivers: {
+        time: "往迹回响：命运并非断裂，而是连绵的序列。我们在旧日的余响里，找寻未来的必然。",
+        data: "理律几何：混沌本无序，理则生几何。借由 AI 的精度，剥离杂讯，唯留真理的纯粹。",
+        emotion: "念起潮升：念头即是流向，意志即是动力。锚定当下的不安，将其化作起航的潮汐。"
+      },
+      cta: ""
     },
     spreadSelector: {
       label: "选择牌阵",
@@ -246,7 +266,7 @@ export const translations = {
       plans: {
         basic: {
           name: "基础版",
-          description: "适合初次体验 以太神谕",
+          description: "适合初次体验 流明塔罗",
           cta: "立即体验",
         },
         pro: {
@@ -276,4 +296,3 @@ export type Translation = typeof translations.en;
 export const getTranslation = (lang: Language): Translation => {
   return translations[lang] || translations.en;
 };
-

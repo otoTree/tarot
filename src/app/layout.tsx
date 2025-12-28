@@ -20,7 +20,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Aether Tarot",
+  title: "Lumin Tarot",
   description: "Mystic insights through the veil of digital consciousness",
 };
 

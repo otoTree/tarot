@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import tailwindAnimate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
     darkMode: ["class"],
@@ -61,9 +62,18 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+      animation: {
+        shine: "shine 1s forwards",
+      },
+      keyframes: {
+        shine: {
+          "0%": { transform: "translateX(-100%) skewX(-12deg)" },
+          "100%": { transform: "translateX(200%) skewX(-12deg)" },
+        },
+      },
   	}
   },
-  plugins: [tailwindAnimate, require("@tailwindcss/typography")],
+  plugins: [tailwindAnimate, typography],
 };
 export default config;

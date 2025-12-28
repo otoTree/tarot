@@ -107,7 +107,7 @@ export const TarotCard = ({
              </div>
              
              <div className="absolute bottom-10 text-[8px] tracking-[0.4em] uppercase text-black/20 font-sans">
-               Aether Divine
+               Lumin Divine
              </div>
           </div>
           
