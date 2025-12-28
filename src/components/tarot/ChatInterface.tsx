@@ -38,7 +38,6 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
   const lastProcessedMessageId = useRef<string | null>(null);
 
   // Quote Share State
-  const [selectionRect, setSelectionRect] = useState<DOMRect | null>(null);
   const [selectedText, setSelectedText] = useState("");
   const [quoteToShare, setQuoteToShare] = useState("");
   const [showQuoteModal, setShowQuoteModal] = useState(false);
@@ -103,11 +102,10 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
 
   // Handle Text Selection
   useEffect(() => {
-    const handleMouseUp = () => {
+    const updateSelection = () => {
       const selection = window.getSelection();
       
       if (!selection || selection.isCollapsed) {
-        setSelectionRect(null);
         setSelectedText("");
         return;
       }
@@ -115,78 +113,60 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
       const text = selection.toString().trim();
       
       if (!text) {
-        setSelectionRect(null);
         setSelectedText("");
         return;
       }
 
+      // Handle cases where range count is 0
+      if (selection.rangeCount === 0) return;
+
       const range = selection.getRangeAt(0);
       
       // Check if selection is within chat container
-      // Use commonAncestorContainer and check if it's inside chatContainerRef
       if (chatContainerRef.current && chatContainerRef.current.contains(range.commonAncestorContainer)) {
         const rect = range.getBoundingClientRect();
         
-        // Ensure the selection is actually visible/valid
         if (rect.width > 0 && rect.height > 0) {
-            setSelectionRect(rect);
             setSelectedText(text);
         }
-      } else {
+      } else if (chatContainerRef.current) {
         // Optional: Allow selection if it intersects with the container
-        // This helps when commonAncestorContainer is higher up (e.g. user selected text across multiple blocks)
-        if (chatContainerRef.current) {
-            const containerRect = chatContainerRef.current.getBoundingClientRect();
-            const rect = range.getBoundingClientRect();
-            
-            // Simple intersection check
-            const intersects = !(rect.right < containerRect.left || 
-                               rect.left > containerRect.right || 
-                               rect.bottom < containerRect.top || 
-                               rect.top > containerRect.bottom);
-            
-            if (intersects && rect.width > 0 && rect.height > 0) {
-                setSelectionRect(rect);
-                setSelectedText(text);
-            } else {
-                setSelectionRect(null);
-                setSelectedText("");
-            }
+        const containerRect = chatContainerRef.current.getBoundingClientRect();
+        const rect = range.getBoundingClientRect();
+        
+        const intersects = !(rect.right < containerRect.left || 
+                           rect.left > containerRect.right || 
+                           rect.bottom < containerRect.top || 
+                           rect.top > containerRect.bottom);
+        
+        if (intersects && rect.width > 0 && rect.height > 0) {
+            setSelectedText(text);
+        } else {
+            setSelectedText("");
         }
       }
     };
 
+    // Debounce selection change to avoid excessive updates on mobile
+    let timeoutId: NodeJS.Timeout;
     const handleSelectionChange = () => {
-        const selection = window.getSelection();
-        if (!selection || selection.isCollapsed) {
-            setSelectionRect(null);
-            setSelectedText("");
-        }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateSelection, 100);
     };
 
-    // Update position on scroll
-    // const handleScroll = () => {
-    //     if (selectionRect) {
-    //          setSelectionRect(null);
-    //          setSelectedText("");
-    //     }
-    // };
-
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("keyup", handleMouseUp); // For keyboard selection
+    document.addEventListener("mouseup", updateSelection);
+    document.addEventListener("keyup", updateSelection); 
     document.addEventListener("selectionchange", handleSelectionChange);
-    // window.addEventListener("scroll", handleScroll, true);
-    // Also listen to touch end for mobile support
-    document.addEventListener("touchend", handleMouseUp);
+    document.addEventListener("touchend", () => setTimeout(updateSelection, 100)); // Delay for mobile selection stability
 
     return () => {
-      document.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("keyup", handleMouseUp);
+      clearTimeout(timeoutId);
+      document.removeEventListener("mouseup", updateSelection);
+      document.removeEventListener("keyup", updateSelection);
       document.removeEventListener("selectionchange", handleSelectionChange);
-      // window.removeEventListener("scroll", handleScroll, true);
-      document.removeEventListener("touchend", handleMouseUp);
+      document.removeEventListener("touchend", updateSelection);
     };
-  }, [selectionRect]);
+  }, []);
 
   // Auto-start reading when component mounts if not already reading
   useEffect(() => {
@@ -321,41 +301,45 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
                 {t.chat.confirm_share || "Share"} ({selectedMessageIds.size})
               </Button>
             </div>
-        ) : selectedText ? (
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm border border-black/5 animate-in fade-in zoom-in duration-200">
-               <Button
-                 size="sm"
-                 onMouseDown={(e) => e.preventDefault()}
-                 onClick={() => {
-                   setQuoteToShare(selectedText);
-                   setShowQuoteModal(true);
-                   window.getSelection()?.removeAllRanges();
-                 }}
-                 className="h-7 text-xs px-3 bg-black text-white hover:bg-black/80 gap-2"
-               >
-                 <Quote className="w-3 h-3" />
-                 {t.share.quote_action || "Quote"}
-               </Button>
-               <div className="w-[1px] h-4 bg-black/10" />
-               <button
-                 onMouseDown={(e) => e.preventDefault()}
-                 onClick={() => {
-                   window.getSelection()?.removeAllRanges();
-                 }}
-                 className="p-1 hover:bg-black/5 rounded-full"
-                 title={t.chat.cancel_select || "Cancel"}
-               >
-                 <X className="w-3 h-3 opacity-50" />
-               </button>
-             </div>
         ) : (
-            <button 
-                onClick={toggleSelectionMode}
-                className="p-2 hover:bg-black/5 rounded-full transition-colors bg-white/50 backdrop-blur-sm group"
-                title={t.chat.share_button || "Share"}
-            >
-                <Share2 className="w-4 h-4 opacity-50 group-hover:opacity-80 transition-opacity" />
-            </button>
+            <div className="flex items-center gap-2">
+              {selectedText && (
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm border border-black/5 animate-in fade-in zoom-in duration-200">
+                   <Button
+                     size="sm"
+                     onMouseDown={(e) => e.preventDefault()}
+                     onClick={() => {
+                       setQuoteToShare(selectedText);
+                       setShowQuoteModal(true);
+                       window.getSelection()?.removeAllRanges();
+                     }}
+                     className="h-7 text-xs px-3 bg-black text-white hover:bg-black/80 gap-2"
+                   >
+                     <Quote className="w-3 h-3" />
+                     {t.share.quote_action || "Quote"}
+                   </Button>
+                   <div className="w-[1px] h-4 bg-black/10" />
+                   <button
+                     onMouseDown={(e) => e.preventDefault()}
+                     onClick={() => {
+                       window.getSelection()?.removeAllRanges();
+                     }}
+                     className="p-1 hover:bg-black/5 rounded-full"
+                     title={t.chat.cancel_select || "Cancel"}
+                   >
+                     <X className="w-3 h-3 opacity-50" />
+                   </button>
+                 </div>
+              )}
+              
+              <button 
+                  onClick={toggleSelectionMode}
+                  className="p-2 hover:bg-black/5 rounded-full transition-colors bg-white/50 backdrop-blur-sm group"
+                  title={t.chat.share_button || "Share"}
+              >
+                  <Share2 className="w-4 h-4 opacity-50 group-hover:opacity-80 transition-opacity" />
+              </button>
+            </div>
         )}
         
         <button 
