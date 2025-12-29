@@ -70,14 +70,22 @@ export function InteractiveDeck() {
                     y: isHovered ? y : index * -0.5, // Stack effect when not hovered
                     zIndex: index
                 }}
-                className="absolute w-28 h-48 bg-white rounded-lg shadow-lg border border-black/10 cursor-grab active:cursor-grabbing hover:-translate-y-4 transition-colors"
+                className="absolute w-28 h-48 rounded-lg shadow-lg cursor-grab active:cursor-grabbing hover:-translate-y-4 transition-colors"
                 style={{
                     transformOrigin: "bottom center",
                 }}
               >
-                 {/* Card Back Design */}
-                 <div className="absolute inset-1 border border-black/5 rounded flex items-center justify-center bg-zinc-50">
-                    <div className="w-8 h-8 rounded-full border border-black/5 opacity-50" />
+                 {/* Card Back Design - Minimalist White */}
+                 <div className="absolute inset-0 border border-slate-200 bg-white flex items-center justify-center overflow-hidden shadow-sm rounded-lg ring-1 ring-slate-900/5">
+                    {/* Subtle Texture */}
+                    <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/felt.png')]" />
+                    
+                    {/* Central Glyph (Simplified) */}
+                    <div className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center relative">
+                        <div className="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center">
+                            <div className="w-1 h-1 bg-slate-900 rounded-full" />
+                        </div>
+                    </div>
                  </div>
               </motion.div>
             );
@@ -85,7 +93,7 @@ export function InteractiveDeck() {
          
          {/* Hint Text */}
          <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-center pointer-events-none">
-             <p className="text-[10px] uppercase tracking-widest text-black/40 bg-white/80 px-3 py-1 rounded-full backdrop-blur">
+             <p className="text-[10px] uppercase tracking-widest text-slate-500 bg-white px-4 py-1.5 rounded-full shadow-sm border border-slate-200 font-serif font-medium">
                  {t.deck.drag_instruction}
              </p>
          </div>

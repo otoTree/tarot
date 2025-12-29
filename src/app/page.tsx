@@ -94,7 +94,7 @@ export default function Home() {
                 <ScrollingMarquee />
                 <ProcessSection />
                 <DemoShowcase />
-                <BrandStory content={t.brandStory} />
+                <BrandStory />
                 <PricingSection />
              </motion.div>
           ) : !selectedSpread ? (

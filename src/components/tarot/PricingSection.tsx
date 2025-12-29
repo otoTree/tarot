@@ -8,29 +8,33 @@ export function PricingSection() {
   const t = getTranslation(language);
 
   return (
-    <section className="w-full py-24 px-4 bg-[#fcfcfc] relative overflow-hidden" id="pricing">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+    <section className="w-full py-32 px-4 relative overflow-hidden" id="pricing">
       
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16 space-y-4">
-          <motion.h2 
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24 items-end">
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-serif font-light tracking-wide"
+            className="space-y-6"
           >
-            {t.pricing.title}
-          </motion.h2>
-          <motion.p 
+            <h2 className="text-6xl md:text-8xl font-heading font-light tracking-tighter text-black leading-[0.9]">
+              PRICING <br />
+              <span className="text-black/30 text-4xl md:text-6xl tracking-normal block mt-2">PLANS</span>
+            </h2>
+          </motion.div>
+          
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-black/50 font-light"
+            className="pb-4"
           >
-            {t.pricing.subtitle}
-          </motion.p>
+            <p className="text-xl text-black/60 font-light max-w-md ml-auto md:text-right">
+              {t.pricing.subtitle}
+            </p>
+          </motion.div>
         </div>
 
         <PricingCards />

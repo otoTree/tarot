@@ -55,7 +55,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans selection:bg-black/5;
+    @apply bg-background text-foreground font-sans selection:bg-[#D4AF37]/20 selection:text-black;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
   h1, h2, h3, h4, h5, h6 {
@@ -78,7 +78,47 @@
     -webkit-backface-visibility: hidden;
   }
   .mask-image-gradient {
-    mask-image: linear-gradient(to bottom, transparent 0%, black 100px);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100px);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 20px, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20px, black 95%, transparent 100%);
   }
+  
+  /* Minimalist Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-black/10 rounded-full hover:bg-black/20 transition-colors;
+  }
+}
+
+/* Typography Enhancements for AI Responses */
+.prose h1, .prose h2, .prose h3 {
+  @apply font-serif text-center font-normal text-black/90 mt-8 mb-4 relative;
+}
+.prose h1::after, .prose h2::after {
+  content: "•";
+  @apply block text-center text-[#D4AF37] text-lg mt-2 opacity-50;
+}
+.prose p:first-of-type::first-letter {
+  @apply float-left text-3xl font-serif pr-2 pt-1 font-normal text-black leading-none;
+}
+.prose blockquote {
+  @apply border-l-2 border-[#D4AF37]/30 pl-4 italic text-black/60 bg-white/50 py-2 pr-2 rounded-r-sm not-italic font-serif;
+}
+.prose strong {
+  @apply font-medium text-black/90;
+}
+.prose ul {
+  @apply list-none pl-0 space-y-2 text-center;
+}
+.prose li {
+  @apply text-black/70 relative inline-block mx-auto;
+}
+.prose li::before {
+  content: "✧";
+  @apply text-[#D4AF37]/60 mr-2 text-xs align-middle;
 }

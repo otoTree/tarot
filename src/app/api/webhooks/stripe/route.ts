@@ -275,8 +275,8 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
   console.log(`[Stripe Webhook] Found user: ${user.id} for customer: ${customerId}`);
 
   // Identify Plan from Invoice to determine credits
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const priceId = (invoice.lines.data[0] as any)?.price?.id;
+  const lineItem = invoice.lines.data[0] as unknown as { price?: { id: string } };
+  const priceId = lineItem?.price?.id;
   console.log(`[Stripe Webhook] Price ID from invoice: ${priceId}`);
 
   let planConfig = PRICING_PLANS[PLANS.BASIC];
