@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,17 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const t = getTranslation(language);
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(0);
+  const [inviteCode, setInviteCode] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('invite');
+      if (code) {
+        setInviteCode(code);
+      }
+    }
+  }, []);
 
   const handleSendCode = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -74,7 +85,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
         await login(email, password);
       } else {
         const code = formData.get('code') as string;
-        await register(email, password, code);
+        const inputInviteCode = formData.get('inviteCode') as string;
+        await register(email, password, code, inputInviteCode);
       }
       onOpenChange(false);
     } catch (err: unknown) {
@@ -144,6 +156,10 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               <div className="space-y-2">
                 <Label htmlFor="code">{t.auth.verification_code}</Label>
                 <Input id="code" name="code" type="text" required placeholder="123456" maxLength={6} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="inviteCode">{t.auth.invite_code}</Label>
+                <Input id="inviteCode" name="inviteCode" type="text" placeholder="INVITE123" defaultValue={inviteCode} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="register-password">{t.auth.password}</Label>

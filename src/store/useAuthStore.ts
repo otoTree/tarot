@@ -8,13 +8,14 @@ interface User {
   plan: PlanLevel;
   aiReadingsUsage: number;
   consultationUsage: number;
+  invitationCode?: string;
 }
 
 interface AuthState {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, code: string) => Promise<void>;
+  register: (email: string, password: string, code: string, inviteCode?: string) => Promise<void>;
   sendVerificationCode: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   fetchUser: () => Promise<void>;
@@ -41,10 +42,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ user: data.user });
   },
 
-  register: async (email, password, code) => {
+  register: async (email, password, code, inviteCode) => {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password, code }),
+      body: JSON.stringify({ email, password, code, inviteCode }),
       headers: { 'Content-Type': 'application/json' },
     });
     

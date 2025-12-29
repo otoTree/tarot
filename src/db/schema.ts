@@ -40,6 +40,10 @@ export const users = pgTable('users', {
   aiReadingsUsage: integer('ai_readings_usage').default(0).notNull(),
   consultationUsage: integer('consultation_usage').default(0).notNull(),
   
+  // Invitation System
+  invitationCode: text('invitation_code').unique(),
+  invitedBy: integer('invited_by'),
+
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -101,10 +105,18 @@ export const messages = pgTable('messages', {
 });
 
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   sessions: many(sessions),
   redemptionCodes: many(redemptionCodes),
   subscriptions: many(subscriptions),
+  inviter: one(users, {
+    fields: [users.invitedBy],
+    references: [users.id],
+    relationName: 'inviter_invitee',
+  }),
+  invitees: many(users, {
+    relationName: 'inviter_invitee',
+  }),
 }));
 
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({

@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { AuthModal } from './AuthModal';
 import { HistoryModal } from './HistoryModal';
 import { RedeemModal } from './RedeemModal';
+import { InviteModal } from './InviteModal';
 import { PricingModal } from '@/components/tarot/PricingModal';
-import { User, LogOut, Coins, History, Gift, Sparkles, Globe, ArrowLeft, RefreshCw } from 'lucide-react';
+import { User, LogOut, Coins, History, Gift, Sparkles, Globe, ArrowLeft, RefreshCw, Share2 } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { getTranslation } from '@/lib/i18n';
@@ -23,6 +24,7 @@ export function UserMenu() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const [showPricingModal, setShowPricingModal] = useState(false);
   const { language, setLanguage, selectedSpread, clearSpread, resetReading } = useStore();
   const t = getTranslation(language);
@@ -148,6 +150,10 @@ export function UserMenu() {
                 <Gift className="mr-2 h-4 w-4" />
                 <span>{t.auth.redeem_code}</span>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowInviteModal(true)} className="cursor-pointer">
+                <Share2 className="mr-2 h-4 w-4" />
+                <span>{t.auth.invite_friends}</span>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => logout()} className="cursor-pointer text-red-500 focus:text-red-500">
                 <LogOut className="mr-2 h-4 w-4" />
@@ -158,6 +164,7 @@ export function UserMenu() {
         </div>
         <HistoryModal open={showHistoryModal} onOpenChange={setShowHistoryModal} />
         <RedeemModal open={showRedeemModal} onOpenChange={setShowRedeemModal} />
+        <InviteModal open={showInviteModal} onOpenChange={setShowInviteModal} />
         <PricingModal open={showPricingModal} onOpenChange={setShowPricingModal} />
     </>
   );
