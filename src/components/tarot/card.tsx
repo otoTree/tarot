@@ -92,30 +92,40 @@ export const TarotCard = ({
       >
         {/* Card Back (Visible when not flipped) */}
         <div 
-          className="absolute inset-0 w-full h-full backface-hidden rounded-xl border border-black/[0.06] bg-white flex items-center justify-center overflow-hidden"
+          className="absolute inset-0 w-full h-full backface-hidden rounded-xl border border-slate-200 bg-white flex items-center justify-center overflow-hidden shadow-sm ring-1 ring-black/5"
           style={{ transform: "translateZ(1px)" }}
         >
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]" />
+          {/* Subtle Paper Texture */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/felt.png')]" />
           
-          <div className="w-[88%] h-[94%] border border-black/[0.08] rounded-lg flex flex-col items-center justify-center bg-zinc-50/30 relative">
-             <div className="absolute inset-4 border border-black/[0.03] rounded-sm" />
-             
-             <div className="w-16 h-16 rounded-full border border-black/10 flex items-center justify-center relative">
-                <div className="w-12 h-12 rounded-full border border-black/5" />
-                <div className="absolute w-full h-px bg-black/[0.05] rotate-45" />
-                <div className="absolute w-full h-px bg-black/[0.05] -rotate-45" />
+          <div className="w-[90%] h-[94%] border border-slate-100 rounded-lg flex flex-col items-center justify-center relative z-10">
+             {/* Central Glyph */}
+             <div className="w-20 h-20 rounded-full border border-slate-200 flex items-center justify-center relative group">
+                <div className="absolute inset-0 rounded-full border border-slate-100 scale-110 group-hover:scale-125 transition-transform duration-1000 ease-out" />
+                <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-slate-900 rounded-full" />
+                </div>
+                
+                {/* Minimalist Orbit */}
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-slate-400 rounded-full" />
+                </motion.div>
              </div>
              
-             <div className="absolute bottom-10 text-[8px] tracking-[0.4em] uppercase text-black/20 font-sans">
-               Lumin Divine
+             <div className="absolute bottom-6 text-[9px] tracking-[0.3em] uppercase text-slate-400 font-serif">
+               LUMIN
              </div>
           </div>
           
-          {/* Decorative corners */}
-          <div className="absolute top-6 left-6 w-3 h-3 border-t border-l border-black/20" />
-          <div className="absolute top-6 right-6 w-3 h-3 border-t border-r border-black/20" />
-          <div className="absolute bottom-6 left-6 w-3 h-3 border-b border-l border-black/20" />
-          <div className="absolute bottom-6 right-6 w-3 h-3 border-b border-r border-black/20" />
+          {/* Minimalist Corners */}
+          <div className="absolute top-3 left-3 w-3 h-3 border-t border-l border-slate-200" />
+          <div className="absolute top-3 right-3 w-3 h-3 border-t border-r border-slate-200" />
+          <div className="absolute bottom-3 left-3 w-3 h-3 border-b border-l border-slate-200" />
+          <div className="absolute bottom-3 right-3 w-3 h-3 border-b border-r border-slate-200" />
         </div>
 
         {/* Card Front (Visible when flipped) */}

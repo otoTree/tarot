@@ -376,8 +376,8 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
                   <div className={cn(
                     "py-2 text-sm leading-relaxed text-left max-w-none w-full",
                     m.role === "user" 
-                      ? "text-black font-medium font-serif whitespace-pre-wrap" 
-                      : "text-black/80 prose prose-neutral prose-sm prose-p:font-serif prose-headings:font-serif prose-headings:font-normal prose-strong:font-medium prose-a:text-black prose-a:underline prose-li:marker:text-black/40"
+                      ? "text-black font-medium font-serif whitespace-pre-wrap px-4 py-3 bg-[#faf9f6] border border-black/5 rounded-2xl rounded-tr-sm italic text-black/60" 
+                      : "text-black/80 prose prose-neutral prose-sm max-w-none prose-p:font-serif prose-headings:font-serif prose-headings:font-normal prose-strong:font-medium prose-a:text-black prose-a:underline prose-li:marker:text-black/40 px-2"
                   )}>
                     {m.role === "user" ? (
                       m.content
@@ -396,10 +396,25 @@ export function ChatInterface({ onClose }: ChatInterfaceProps) {
              </div>
           )}
           {isLoading && (
-             <div className="flex items-center gap-2 py-2">
-               <span className="w-1.5 h-1.5 bg-black/40 rounded-full animate-bounce" />
-               <span className="w-1.5 h-1.5 bg-black/40 rounded-full animate-bounce [animation-delay:0.2s]" />
-               <span className="w-1.5 h-1.5 bg-black/40 rounded-full animate-bounce [animation-delay:0.4s]" />
+             <div className="flex items-center justify-center gap-1 py-8 opacity-50">
+               <motion.div 
+                 animate={{ scale: [1, 1.2, 1], opacity: [0.3, 1, 0.3] }} 
+                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                 className="w-2 h-2 bg-[#D4AF37] rounded-full blur-[1px]" 
+               />
+               <motion.div 
+                 animate={{ scale: [1, 1.2, 1], opacity: [0.3, 1, 0.3] }} 
+                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                 className="w-2 h-2 bg-[#D4AF37] rounded-full blur-[1px]" 
+               />
+               <motion.div 
+                 animate={{ scale: [1, 1.2, 1], opacity: [0.3, 1, 0.3] }} 
+                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                 className="w-2 h-2 bg-[#D4AF37] rounded-full blur-[1px]" 
+               />
+               <span className="ml-3 text-xs font-serif text-[#D4AF37] tracking-widest uppercase">
+                 {language === 'zh' ? "正在连接流明..." : "Consulting Lumin..."}
+               </span>
              </div>
           )}
           

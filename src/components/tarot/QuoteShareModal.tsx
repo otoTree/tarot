@@ -31,7 +31,7 @@ export function QuoteShareModal({ open, onOpenChange, quote, question }: QuoteSh
 
   const generateText = () => {
     let text = `"${quote}"\n\n`;
-    text += `— ${t.app?.title || "Aether Tarot"}\n`;
+    text += `— ${t.app?.title || "Lumin Tarot"}\n`;
     if (question) {
         text += `${t.question?.current || "Question"}: ${question}`;
     }

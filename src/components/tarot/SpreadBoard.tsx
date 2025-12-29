@@ -33,8 +33,8 @@ export function SpreadBoard() {
       ref={containerRef}
       className="relative w-full aspect-[4/3] max-w-4xl mx-auto my-8"
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black via-transparent to-transparent" />
+      {/* Background Pattern - Clean White */}
+      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-200 via-transparent to-transparent" />
       
       {/* Slots */}
       {currentSpread.positions.map((pos) => {
@@ -55,13 +55,13 @@ export function SpreadBoard() {
           >
             {/* Slot Marker */}
             <div className={cn(
-              "absolute inset-0 border-2 border-dashed rounded-xl transition-all duration-300",
+              "absolute inset-0 border-2 border-dashed rounded-xl transition-all duration-500",
               placed 
                 ? "border-transparent opacity-0" 
-                : "border-black/10 group-hover:border-black/20 bg-white/20"
+                : "border-slate-200 group-hover:border-slate-300 bg-slate-50/50 backdrop-blur-sm"
             )}>
               <div className="absolute inset-0 flex items-center justify-center text-center p-4">
-                <span className="text-[10px] uppercase tracking-widest text-black/30 font-semibold">
+                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-serif font-bold group-hover:text-slate-600 transition-colors">
                   {pos.name}
                 </span>
               </div>
@@ -80,20 +80,25 @@ export function SpreadBoard() {
                     card={placed.card}
                     isFlipped={isSpreadComplete}
                     isReversed={placed.isReversed}
-                    onFlip={() => isSpreadComplete && setSelectedCard({ card: placed.card, isReversed: placed.isReversed })}
+                    onFlip={() => {
+                        if (isSpreadComplete) {
+                            setSelectedCard({ card: placed.card, isReversed: placed.isReversed });
+                            if (navigator.vibrate) navigator.vibrate(5);
+                        }
+                    }}
                     draggable={false}
                     className={cn(
-                        "w-full h-full !shadow-md hover:!shadow-lg transition-shadow",
+                        "w-full h-full !shadow-lg hover:!shadow-xl transition-shadow ring-1 ring-slate-900/5",
                         isSpreadComplete && "cursor-pointer"
                     )}
                   />
                   {/* Label below card */}
                   <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-48 text-center flex flex-col gap-1 items-center z-20 pointer-events-none">
-                    <span className="text-[9px] uppercase tracking-widest text-black/40 font-semibold bg-white/90 backdrop-blur px-2 py-0.5 rounded-full shadow-sm border border-black/5">
+                    <span className="text-[9px] uppercase tracking-widest text-slate-400 font-semibold bg-white/90 backdrop-blur px-2 py-0.5 rounded-full shadow-sm border border-slate-100">
                         {pos.name}
                     </span>
                     {isSpreadComplete && (
-                      <span className="text-xs font-serif text-black/80 bg-white/90 backdrop-blur px-3 py-1 rounded-lg shadow-sm border border-black/5 whitespace-nowrap">
+                      <span className="text-xs font-serif text-slate-900 bg-white/95 backdrop-blur px-3 py-1 rounded-lg shadow-sm border border-slate-200 whitespace-nowrap">
                           {cardData?.name} {placed.isReversed && <span className="text-red-900/60 italic ml-1 text-[10px]">{language === 'zh' ? '(逆位)' : '(Rev.)'}</span>}
                       </span>
                     )}

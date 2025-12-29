@@ -50,16 +50,15 @@ export function Hero({ onStart }: { onStart: () => void }) {
         {/* Main Title - Craft Style */}
         <div className="space-y-6">
           <motion.h1
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-7xl md:text-[8rem] lg:text-[10rem] leading-[0.9] font-serif font-extralight tracking-widest text-black mix-blend-overlay hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-emerald-800/20 hover:via-emerald-500/20 hover:to-emerald-800/20 transition-all duration-700 cursor-default select-none relative group whitespace-nowrap"
-            style={{ fontWeight: 200 }}
+            initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            className="text-5xl md:text-8xl lg:text-9xl xl:text-[10rem] leading-tight font-heading font-normal tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-neutral-900 to-neutral-500 hover:to-neutral-800 transition-all duration-700 cursor-default select-none relative group whitespace-nowrap z-20 py-4 px-2"
           >
             {language === 'zh' ? "流明塔罗" : "LUMIN TAROT"}
             
             {/* Light Scan Effect */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 translate-x-[-100%] group-hover:animate-shine pointer-events-none mix-blend-soft-light" />
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/80 to-transparent -skew-x-12 translate-x-[-100%] group-hover:animate-shine pointer-events-none mix-blend-overlay" />
           </motion.h1>
           <motion.div
             initial={{ opacity: 0 }}

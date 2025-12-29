@@ -14,7 +14,8 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "monospace"],
-        serif: ["var(--font-serif)", "serif"],
+        serif: ["var(--font-serif)", "var(--font-noto-serif-sc)", "serif"],
+        heading: ["var(--font-playfair)", "serif"],
       },
   		colors: {
   			background: 'hsl(var(--background))',
@@ -65,11 +66,20 @@ const config: Config = {
   		},
       animation: {
         shine: "shine 1s forwards",
+        "aurora": "aurora 60s linear infinite",
       },
       keyframes: {
         shine: {
           "0%": { transform: "translateX(-100%) skewX(-12deg)" },
           "100%": { transform: "translateX(200%) skewX(-12deg)" },
+        },
+        aurora: {
+          "0%": {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          "100%": {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
         },
       },
   	}

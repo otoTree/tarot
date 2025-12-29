@@ -115,23 +115,30 @@ export function PricingCards({ className, isModal = false }: PricingCardsProps) 
           viewport={isModal ? undefined : { once: true }}
           transition={{ delay: index * 0.1 + (isModal ? 0 : 0.2) }}
           className={cn(
-            "relative p-8 rounded-2xl border bg-white/50 backdrop-blur-sm flex flex-col",
-            plan.featured ? "border-black shadow-lg z-10" : "border-black/5 hover:border-black/20 transition-colors",
-            plan.featured && !isModal ? "scale-105" : ""
+            "relative p-10 rounded-2xl border bg-white/40 backdrop-blur-md flex flex-col transition-all duration-500",
+            plan.featured 
+              ? "bg-white/70 shadow-2xl shadow-slate-200/50 border-slate-200 z-10 scale-[1.02]" 
+              : "border-slate-100 hover:bg-white/60 hover:shadow-xl hover:shadow-slate-200/30 hover:border-slate-200/60 hover:-translate-y-1"
           )}
         >
-          <div className="mb-8 text-center">
-            <h3 className="text-xl font-serif mb-2">{plan.trans.name}</h3>
-            <div className="flex items-baseline justify-center gap-1 mb-4">
-              <span className="text-4xl font-light font-serif">${plan.config.price}</span>
-              <span className="text-black/40 text-sm">{t.pricing.monthly}</span>
+          <div className="mb-10">
+            <div className="flex justify-between items-start mb-6">
+              <h3 className="text-xl font-heading font-medium text-slate-800 uppercase tracking-widest">{plan.trans.name}</h3>
+              {plan.featured && (
+                <span className="bg-slate-900 text-white text-[10px] uppercase tracking-widest px-3 py-1 rounded-full font-medium">Most Popular</span>
+              )}
             </div>
-            <p className="text-sm text-black/50 font-light min-h-[40px]">
+            
+            <div className="flex items-baseline gap-1 mb-6 group-hover:scale-105 transition-transform duration-500 origin-left">
+              <span className="text-5xl font-light font-heading tracking-tighter text-slate-900">${plan.config.price}</span>
+              <span className="text-slate-400 text-sm font-light uppercase tracking-wide">/ {t.pricing.monthly}</span>
+            </div>
+            <p className="text-sm text-slate-500 font-sans font-light leading-relaxed min-h-[40px]">
               {plan.trans.description}
             </p>
           </div>
 
-          <div className="flex-1 space-y-4 mb-8">
+          <div className="flex-1 space-y-5 mb-10">
             {featureKeys.map((key) => {
               const label = t.pricing.features[key === 'aiReadings' ? 'ai_readings' : 
                                              key === 'historyDays' ? 'history_days' :
@@ -139,13 +146,13 @@ export function PricingCards({ className, isModal = false }: PricingCardsProps) 
                                              key === 'dailyFortune' ? 'daily_fortune' :
                                              key === 'reportExport' ? 'report_export' :
                                              key === 'apiAccess' ? 'api_access' : 'consultation'];
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              const value = formatFeatureValue(key, (plan.config.features as any)[key]);
+              
+              const value = formatFeatureValue(key, plan.config.features[key]);
               
               return (
-                <div key={key} className="flex items-center justify-between text-sm group">
-                  <span className="text-black/60 group-hover:text-black/80 transition-colors">{label}</span>
-                  <span className="font-medium">{value}</span>
+                <div key={key} className="flex items-center justify-between text-sm group/item">
+                  <span className="text-slate-500 group-hover/item:text-slate-700 transition-colors">{label}</span>
+                  <span className="font-medium text-slate-800">{value}</span>
                 </div>
               );
             })}
@@ -154,8 +161,10 @@ export function PricingCards({ className, isModal = false }: PricingCardsProps) 
           <Button 
             variant={plan.featured ? "default" : "outline"}
             className={cn(
-              "w-full rounded-full h-12 text-sm tracking-wider font-medium",
-              plan.featured ? "bg-black text-white hover:bg-black/90" : "hover:bg-black/5"
+              "w-full rounded-xl h-12 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-300 shadow-sm",
+              plan.featured 
+                ? "bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 hover:scale-[1.02]" 
+                : "bg-white/50 border-slate-200 text-slate-600 hover:bg-white hover:text-slate-900 hover:border-slate-300 hover:shadow-md"
             )}
             disabled={true}
           >

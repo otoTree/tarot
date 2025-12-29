@@ -10,17 +10,24 @@ import { Star } from "lucide-react";
 
 const SpreadPreview = ({ positions }: { positions: SpreadPosition[] }) => {
   return (
-    <div className="relative w-full aspect-[4/3] bg-black/[0.02] rounded-md border border-black/5 overflow-hidden pointer-events-none">
+    <div className="relative w-full aspect-[4/3] bg-slate-50/50 rounded-lg border border-slate-200 overflow-hidden pointer-events-none backdrop-blur-sm">
+      {/* Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] bg-[size:16px_16px]" />
+      
       {positions.map((pos) => (
         <div
           key={pos.id}
-          className="absolute w-[18%] h-[28%] bg-white border border-black/10 shadow-sm rounded-[2px]"
+          className="absolute w-[18%] h-[28%] border border-slate-200 rounded-[2px] shadow-sm bg-white/80"
           style={{
             left: `${pos.x}%`,
             top: `${pos.y}%`,
             transform: "translate(-50%, -50%)",
           }}
-        />
+        >
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-slate-400 font-mono">
+            {pos.id}
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -42,7 +49,7 @@ const DifficultyBadge = ({ difficulty, language }: { difficulty?: 'beginner' | '
 
   return (
     <span className={cn(
-      "text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full border font-medium",
+      "text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-none border font-mono font-medium",
       color
     )}>
       {label}
@@ -53,9 +60,11 @@ const DifficultyBadge = ({ difficulty, language }: { difficulty?: 'beginner' | '
 const RecommendedBadge = ({ language }: { language: 'en' | 'zh' }) => {
   const t = getTranslation(language);
   return (
-    <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full border border-amber-200/50">
-      <Star className="w-3 h-3 text-amber-600 fill-amber-600" />
-      <span className="text-[10px] font-semibold text-amber-800">{t.spreadSelector.recommended}</span>
+    <div className="absolute top-0 right-0 px-3 py-1 bg-amber-50 border-l border-b border-amber-200/50 backdrop-blur-sm">
+      <div className="flex items-center gap-1.5">
+        <Star className="w-3 h-3 text-amber-500 fill-amber-500/20" />
+        <span className="text-[10px] font-mono tracking-widest text-amber-700 uppercase">{t.spreadSelector.recommended}</span>
+      </div>
     </div>
   );
 };
@@ -117,71 +126,77 @@ export function SpreadSelector() {
                 whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 className={cn(
-                  "group relative flex flex-col gap-4 p-6 rounded-2xl border text-left transition-all duration-300",
+                  "group relative flex flex-col gap-4 p-0 rounded-none border text-left transition-all duration-300 overflow-hidden",
                   isSelected
-                    ? "bg-white/95 border-black/30 shadow-xl shadow-black/[0.05] ring-2 ring-black/10"
-                    : "bg-white/60 border-black/10 hover:bg-white/90 hover:border-black/20 hover:shadow-lg hover:shadow-black/[0.03]"
+                    ? "bg-white border-slate-300 ring-1 ring-slate-200 shadow-xl"
+                    : "bg-white/60 border-slate-200/60 hover:border-slate-300 hover:bg-white/90 hover:shadow-lg"
                 )}
               >
-                {/* Recommended Badge */}
-                {spread.recommended && !isSelected && <RecommendedBadge language={language} />}
+                {/* Background Noise - Removed to use global grain */}
+                
+                {/* Content Container */}
+                <div className="p-6 relative z-10 flex flex-col gap-4">
+                  {/* Recommended Badge */}
+                  {spread.recommended && !isSelected && <RecommendedBadge language={language} />}
 
-                {/* Header */}
-                <div className="flex justify-between items-start gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h4 className={cn(
-                        "font-serif text-xl tracking-wide",
-                        isSelected ? "text-black" : "text-black/80 group-hover:text-black"
-                      )}>
-                        {spread.name}
-                      </h4>
-                      <DifficultyBadge difficulty={spread.difficulty} language={language} />
+                  {/* Header */}
+                  <div className="flex justify-between items-start gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <h4 className={cn(
+                          "font-heading text-xl tracking-wider uppercase",
+                          isSelected ? "text-slate-900" : "text-slate-700 group-hover:text-slate-900"
+                        )}>
+                          {spread.name}
+                        </h4>
+                        <DifficultyBadge difficulty={spread.difficulty} language={language} />
+                      </div>
+                      <p className="text-[10px] uppercase tracking-widest text-slate-400 font-mono">
+                        {`// ${spread.positions.length} ${t.spreadSelector.cards_count}`}
+                      </p>
                     </div>
-                    <p className="text-[10px] uppercase tracking-wider text-black/30 font-medium">
-                      {spread.positions.length} {t.spreadSelector.cards_count}
-                    </p>
                   </div>
-                </div>
 
-                {/* Preview Area */}
-                <div className="w-full opacity-70 group-hover:opacity-100 transition-opacity">
-                  <SpreadPreview positions={spread.positions} />
-                </div>
-
-                {/* Tags */}
-                {spread.tags && spread.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {spread.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] px-2 py-1 rounded-full bg-black/5 text-black/60 font-medium border border-black/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  {/* Preview Area */}
+                  <div className="w-full opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                    <SpreadPreview positions={spread.positions} />
                   </div>
-                )}
 
-                {/* Description */}
-                <div className="space-y-2">
-                  <p className="text-sm leading-relaxed text-black/70 font-medium">
-                    {spread.description}
-                  </p>
-                  {spread.detail && (
-                    <p className="text-xs leading-relaxed text-black/50 line-clamp-2">
-                      {spread.detail}
-                    </p>
+                  {/* Tags */}
+                  {spread.tags && spread.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {spread.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] px-2 py-1 bg-slate-100 text-slate-500 font-mono border border-slate-200"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   )}
+
+                  {/* Description */}
+                  <div className="space-y-2 border-t border-slate-100 pt-4">
+                    <p className="text-sm leading-relaxed text-slate-600 font-light font-sans">
+                      {spread.description}
+                    </p>
+                    {spread.detail && (
+                      <p className="text-xs leading-relaxed text-slate-400 line-clamp-2 font-mono">
+                        &gt; {spread.detail}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                {/* Selection Indicator */}
+                {/* Selection Indicator - Cyber Corners (Light Mode) */}
                 {isSelected && (
-                  <motion.div
-                    layoutId="selection-indicator"
-                    className="absolute inset-0 border-2 border-black/20 rounded-2xl pointer-events-none"
-                    transition={{ duration: 0.3 }}
-                  />
+                  <>
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-slate-400" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-slate-400" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-slate-400" />
+                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-slate-400" />
+                  </>
                 )}
               </motion.button>
             );

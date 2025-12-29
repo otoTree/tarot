@@ -4,15 +4,15 @@ export const translations = {
     app: {
       title: "Lumin Tarot",
       subtitle: "Mystic insights through the veil of digital consciousness",
-      start: "Begin Consultation",
+      start: "Start Consultation",
       reset: "Reset Reading",
-      lang_switch: "Switch Language",
+      lang_switch: "Switch Language"
     },
     hero: {
-        title: "Lumin Tarot",
-        subtitle: "Ancient wisdom meets digital consciousness. Fate flows like a river; ask the cards, and listen to the echo.",
-        cta: "Select a Spread",
-        scroll_to_discover: "Scroll to Discover"
+      title: "Lumin Tarot",
+      subtitle: "Mystic insights through the veil of digital consciousness",
+      cta: "Begin Consultation",
+      scroll: "Scroll to explore"
     },
     brandStory: {
       title: "LUMIN | The Architecture of Fate",
@@ -164,7 +164,7 @@ export const translations = {
         title: "流明塔罗",
         subtitle: "古老智慧与数字意识的交汇。命运如流，叩问塔罗，静听回响。",
         cta: "选择牌阵",
-        scroll_to_discover: "探索",
+        scroll: "滚动探索"
     },
     brandStory: {
       title: "流明塔罗 | 命运架构「溯流三境」",
